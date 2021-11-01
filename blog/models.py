@@ -16,45 +16,6 @@ class Location(models.Model):
     def __str__(self):
         return self.n
 
-class BlogView(models.Model):
-  category = models.ForeignKey(Mycategory,null=True,on_delete=models.CASCADE)
-  body=models.TextField(blank=True)
-  name = models.CharField(max_length=100)
-  image=CloudinaryField()
-  user = models.ForeignKey(User,null=True,on_delete=models.CASCADE)
-  location=models.ForeignKey(Location,null=True,on_delete=models.CASCADE)
-  neighborhood=models.ForeignKey(Neighborhood,null=True,on_delete=models.CASCADE)
-  created_at=models.DateTimeField(auto_now_add=True)
-  updated_at=models.DateTimeField(auto_now=True)
-
-
-   
-  def create_post(self):
-        self.save()
-
-    
-  def delete_post(self):
-        self.delete()
-
-    
-  def update_post(self):
-        self.update()
-
-    
-  @classmethod
-  def search_by_title(cls, search_term):
-        post = cls.objects.filter(title__icontains=search_term)
-        return post
-
-   
-  @classmethod
-  def find_post(cls, id):
-        post = cls.objects.get(id=id)
-        return post
-
-  def __str__(self):
-        return self.name
-
 class NeighbourHood(models.Model):
     name = models.CharField(max_length=50)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
@@ -86,7 +47,7 @@ class NeighbourHood(models.Model):
         return hood
 
     def __str__(self):
-        return self.name        
+        return self.name  
 
 class Mycategory(models.Model):
     name = models.CharField(max_length=100)
@@ -99,7 +60,50 @@ class Mycategory(models.Model):
 
     class Meta:
         verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = 'Categories'        
+
+class BlogView(models.Model):
+  category = models.ForeignKey(Mycategory,null=True,on_delete=models.CASCADE)
+  body=models.TextField(blank=True)
+  name = models.CharField(max_length=100)
+  image=CloudinaryField()
+  user = models.ForeignKey(User,null=True,on_delete=models.CASCADE)
+  location=models.ForeignKey(Location,null=True,on_delete=models.CASCADE)
+  neighborhood=models.ForeignKey(null=True,on_delete=models.CASCADE)
+  created_at=models.DateTimeField(auto_now_add=True)
+  updated_at=models.DateTimeField(auto_now=True)
+
+
+   
+  def create_post(self):
+        self.save()
+
+    
+  def delete_post(self):
+        self.delete()
+
+    
+  def update_post(self):
+        self.update()
+
+    
+  @classmethod
+  def search_by_title(cls, search_term):
+        post = cls.objects.filter(title__icontains=search_term)
+        return post
+
+   
+  @classmethod
+  def find_post(cls, id):
+        post = cls.objects.get(id=id)
+        return post
+
+  def __str__(self):
+        return self.name
+
+      
+
+
 
 
 
