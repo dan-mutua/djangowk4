@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .models import Business,NeighbourHood,Location,BlogView,Contact,Mycategory,Theprofile,Post
 from django.views.generic import ListView,DetailView,UpdateView,DeleteView,CreateView
-import cloudinary.uploader
-import cloudinary.api
+from .forms import PostForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 class HomePage(ListView):
