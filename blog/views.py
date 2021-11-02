@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Business,NeighbourHood,Location,BlogView,Contact,Mycategory,Theprofile,Post
+from .models import Post
 from django.views.generic import ListView,DetailView,UpdateView,DeleteView,CreateView
 from .forms import PostForm
 from django.urls import reverse_lazy
