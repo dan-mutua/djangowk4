@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from datetime import datetime 
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
@@ -69,7 +70,7 @@ class BlogView(models.Model):
   image=CloudinaryField()
   user = models.ForeignKey(User,null=True,on_delete=models.CASCADE)
   location=models.ForeignKey(Location,null=True,on_delete=models.CASCADE)
-  neighborhood=models.ForeignKey(null=True,on_delete=models.CASCADE)
+#   neighborhood=models.ForeignKey(null=True,on_delete=models.CASCADE)
   created_at=models.DateTimeField(auto_now_add=True)
   updated_at=models.DateTimeField(auto_now=True)
 
@@ -117,7 +118,32 @@ class Location(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name        
+        return self.name    
+class Category(models.Model):
+  name = models.CharField(max_length=300)
+
+  def __str__(self):
+      return self.name
+
+  def get_absolute_url(self):
+    return reverse('home')
+
+
+
+
+class Post(models.Model):
+  
+  title = models.CharField(max_length=200)
+  author = models.ForeignKey(User, on_delete=models.CASCADE)
+  category = models.CharField(max_length=200,default='supercar')
+  images =  CloudinaryField( 'image', null=True, )
+  body = models.TextField()
+
+  def __str__(self):
+    return self.title 
+
+  def get_absolute_url(self):
+    return reverse('home')            
 
  
 class Theprofile(models.Model):
