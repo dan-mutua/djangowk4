@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post,ProfileView
+from .models import Post,ProfileView,NeibaV
 
 
 
@@ -22,11 +22,11 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ProfileView
-        fields = ['image', 'user_location','name', 'user_email', 'phonenumber', 'user_bio', 'gender']
+        fields = ['user_pic', 'user_email','house_location','user', 'user_email',  'user_bio', 'gender']
 
 class MtaaForm(forms.ModelForm):
      
 
      class Meta:
-         model=Post
-         fields = ['user','mtaapic', 'name', 'residents_number', 'location']    
+         model=NeibaV
+         fields = ['neiba','author','title','body']    
