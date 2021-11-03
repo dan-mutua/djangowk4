@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Post,NeibaV, ProfileView
+from .models import NeibaV, ProfileView
 from django.views.generic import ListView,DetailView,UpdateView,DeleteView,CreateView
-from .forms import PostForm
+
 from django.urls import reverse_lazy
 
 # Create your views here.
@@ -9,14 +9,10 @@ class HomePage(ListView):
   model= NeibaV
   template_name= 'home.html'
 
-class  NeibaD(DetailView):
+class  ProfilV(DetailView):
   model = ProfileView
   template_name='profile.html'
 
-class Addp(CreateView):
-  model = Post
-  form_class=PostForm
-  template_name= 'addphoto.html'  
 
 class UpdateProfile( UpdateView):
     model = ProfileView
