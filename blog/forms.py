@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post,Category
+from .models import Post,ProfileView
 
 
 
@@ -8,21 +8,21 @@ from .models import Post,Category
 class PostForm(forms.ModelForm):
   class Meta:
     model = Post
-    fields = ('title', 'author','category','images','body')
+    fields = ('user_name', 'user_id','name','image','user_location')
 
-    widgets={
-      'title': forms.TextInput(attrs={'class':'form-control'}),
-      'author':forms.Select(attrs={'class':'form-control'}),
-      # 'category':forms.Select(choices=choices_l,attrs={'class':'form-control'}),
-      'body': forms.Textarea(attrs={'class':'form-control'})
-    } 
+    # widgets={
+    #   'title': forms.TextInput(attrs={'class':'form-control'}),
+    #   'author':forms.Select(attrs={'class':'form-control'}),
+    #   # 'category':forms.Select(choices=choices_l,attrs={'class':'form-control'}),
+    #   'body': forms.Textarea(attrs={'class':'form-control'})
+    # } 
     
 class ProfileUpdateForm(forms.ModelForm):
   
 
     class Meta:
-        model = Post
-        fields = ['userpic', 'houselocation','user', 'email', 'phonenumber', 'bio', 'gender']
+        model = ProfileView
+        fields = ['image', 'user_location','name', 'user_email', 'phonenumber', 'user_bio', 'gender']
 
 class MtaaForm(forms.ModelForm):
      
