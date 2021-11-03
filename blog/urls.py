@@ -1,16 +1,16 @@
 
 from django.urls import path
-from .views import AddCategory, Addp, HomePage,BlogD,UpdateViewB,DeleteViewB
+from .views import AddCategory, Addp, HomePage,DeleteViewB, NeibaD, UpdateProfile
 
 
 
 
 urlpatterns = [
   path('', HomePage.as_view(), name='home'),
-  path('blog/<int:pk>', BlogD.as_view(), name='blog_detail' ),
-  path('add_photo/',Addp.as_view(), name='addphoto'),
+  path('neiba/<int:pk>', NeibaD.as_view(), name='neiba_detail' ),
+  path('updateprofile/<int:pk>',UpdateProfile.as_view(), name='updateprofile'),
   path('add_category/',AddCategory.as_view(), name='addcategory'),
-  path('article/edit/<int:pk>', UpdateViewB.as_view(), name="updateb"),
+  path('blog/edit/<int:pk>', UpdateProfile.as_view(), name="updateb"),
   path('article/<int:pk>/delete',  DeleteViewB.as_view(), name="deleteb"),
   
 ]

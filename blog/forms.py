@@ -17,3 +17,16 @@ class PostForm(forms.ModelForm):
       'body': forms.Textarea(attrs={'class':'form-control'})
     } 
     
+class ProfileUpdateForm(forms.ModelForm):
+  
+
+    class Meta:
+        model = Post
+        fields = ['userpic', 'houselocation','user', 'email', 'phonenumber', 'bio', 'gender']
+
+class MtaaForm(forms.ModelForm):
+     
+
+     class Meta:
+         model=Post
+         fields = ['user','mtaapic', 'name', 'residents_number', 'location']    
