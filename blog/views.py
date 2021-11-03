@@ -11,7 +11,7 @@ class HomePage(ListView):
 
 class  NeibaD(DetailView):
   model = ProfileView
-  template_name='neiba_detail.html'
+  template_name='profile.html'
 
 class Addp(CreateView):
   model = Post
@@ -33,7 +33,3 @@ class UpdateProfile( UpdateView):
 
 
 
-class DeleteViewB(DeleteView):
-  model = Post
-  template_name= 'delete.html'
-  success_url= reverse_lazy('home')
