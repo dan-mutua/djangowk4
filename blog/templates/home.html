@@ -7,25 +7,7 @@
 <div class="container-fluid">
    <h2 class="text-center">Welcome to our neiba</h2> 
     <div class="row">
-        <div class="col-sm-12 d-flex" style="flex-wrap:wrap !important; justify-content:space-around;">
-            {% for neiba in neibas %}
-            <div class="card d-flex flex-column col-sm-3 mx-1 my-2" style="height:600px;">
-                <img src="#" alt="mtaapic" height="400px">
-                <h4 class="text-center my-2">{{neiba.name}}</h4>
-                <h6>Location: {{neiba.location}} </h6>
-                <h6>Posted By: {{neiba.user}} </h6>
-                <h6>Posted On: {{neiba.pub_date}} </h6>
-                <div class="d-flex justify-content-around mt-auto">
-                    <p class="mt-auto">
-                        <a class="btn mt-auto btn-outline-primary" href="">
-                            Join
-                        </a>
-                    </p>
-                    <!-- <h5><a href="" class="btn btn-success">Add Comment</a></h5> -->
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+        
     </div>
 </div>
 {%endblock%}

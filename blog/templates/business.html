@@ -1,13 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}edit photo{% endblock%}
+{% block title %}busines {% endblock%}
 {% block content %}
-<h3> Update photo</h3>
 
-<div class="form-group">
-  <form method="POST">
-       {% csrf_token %}
-       {{ form.as_p}}
-       <button class="btn btn-primary">add</button>
-  </form>
+             
+<strong class="display-5 text-center font-weight-bold">Kindly submit your business information here </strong>
+    
+        
+<div class="container">
+  <div class="row">
+     
+      <div class="col-lg-3"></div>
+
+      <div class="col-lg-6 pt-2 ">
+            <form  action="{%url 'business'%}" method="post" enctype="multipart/form-data">
+              {%csrf_token%}
+              {{ form.as_p}}
+              
+              <p>if you cannot find your neighbourhood <a href="{% url 'profile'%}">add here </a> </p>
+              <input type="submit" class="btn btn-success btn-lg font-weight-bold" value="SUBMIT">
+            </form>
+      </div>
+
+      <div class="col-lg-3"></div>
+    
+  </div>
 </div>
-{% endblock%}
+{% endblock %}

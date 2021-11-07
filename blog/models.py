@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class Neighbourhood(models.Model):
     name = models.CharField(max_length=200)
     location = models.CharField(max_length=250)
-    occupants_count = models.IntegerField()
+    id_name = models.IntegerField()
     pub_date = models.DateTimeField(auto_now_add=True)
     Admin = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     
@@ -21,30 +21,30 @@ class Neighbourhood(models.Model):
         
     @classmethod
     def get_neighbourhoods(cls):
-        projects = cls.objects.all()
-        return projects
+        blog = cls.objects.all()
+        return blog
     
     @classmethod
     def search_neighbourhoods(cls, search_term):
-        projects = cls.objects.filter(name__icontains=search_term)
-        return projects
+        blogs= cls.objects.filter(name__icontains=search_term)
+        return blogs
     
     
     @classmethod
     def get_by_admin(cls, Admin):
-        projects = cls.objects.filter(Admin=Admin)
-        return projects
+        blogs = cls.objects.filter(Admin=Admin)
+        return blogs
     
     
     @classmethod
     def get_neighbourhood(request, neighborhood):
         try:
-            project = Neighbourhood.objects.get(pk = id)
+            blog = Neighbourhood.objects.get(pk = id)
             
         except ObjectDoesNotExist:
             raise Http404()
         
-        return project
+        return blog
     
     def __str__(self):
         return self.name
@@ -125,11 +125,11 @@ class Business(models.Model):
         verbose_name_plural = 'Business'
 
 class Post(models.Model):
-    post = models.TextField()
+    post = models.TextField(null=True)
     pub_date = models.DateTimeField(auto_now_add=True)
-    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
-    Author = models.ForeignKey(User, on_delete=models.CASCADE)
-    author_profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE,null=True)
+    Author = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    author_profile = models.ForeignKey(Profile,on_delete=models.CASCADE,null=True)
     
     def save_post(self):
         self.save()
