@@ -56,7 +56,7 @@ python manage.py runserver
 - Open the browser and navigate to http://127.0.0.1:8000/ to see the application in action
 
 
-* Live link to view the project <a href="https://rocky-atoll-16631.herokuapp.com/">the blog</a>
+
 
 
 ## Known Bugs
