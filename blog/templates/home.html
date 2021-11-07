@@ -1,13 +1,28 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 
 
  {% block content %}
 
 <div class="container-fluid">
-   <h2 class="text-center">Welcome to our neiba</h2> 
+   
     <div class="row">
+        <strong class="text-align-center"> Welcome to neiba platform</strong>
         
+     <div>
+        {% for hme in post %}
+        <div class="card container-fluid" style="margin: 30px; width:200px; background-color:grey;">
+            {{ hme.post |truncatechars:30  }}
+            {{ hme.pub_date }}
+            {{ hme.neighbourhood }}
+            {{ hme.Author }}
+            {{ hme.author_profile}}
+        </div>
+        {%endfor%}
+     </div>
+
     </div>
 </div>
 {%endblock%}

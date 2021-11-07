@@ -10,7 +10,7 @@ class SignupForm(UserCreationForm):
 
   class Meta:
     model = User
-    fields= ('username','firstname', 'last_name','email', 'password1','password2')
+    fields= ('username', 'last_name','email', 'password1','password2')
 
     def __init__(self,*args,**kwargs):
       super(SignupForm, self).__init__(*args,**kwargs)
@@ -28,4 +28,4 @@ class EditProfile(UserChangeForm):
 
   class Meta:
     model = User
-    fields= ('username','firstname', 'last_name','email', 'password')      
+    fields= ('username', 'last_name','email', 'password')      

@@ -6,13 +6,13 @@
     {% if businesses %}
     <div class="jumbotron jumbotron-fluid bg-info">
         <div class="">
-          <h2 class="display-6 text-center font-weight-bold">Found {{ businesses|length }} business for searched term {{message}}</h2>
+          <h2 class="display-6 text-center font-weight-bold">Found {{ businesses|length }} business for searched term {{infos}}</h2>
         </div>
       </div>
     {% else %}
     <div class="jumbotron jumbotron-fluid bg-light">
         <div class="">
-          <h2 class="display-5 text-center font-weight-bold">Found 0 business for the searched term {{message}}</h2>
+          <h2 class="display-5 text-center font-weight-bold">Bad search {{infos}}</h2>
         </div>
       </div>
     {% endif %}

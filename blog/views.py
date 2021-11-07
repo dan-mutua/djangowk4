@@ -1,16 +1,32 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 import datetime as dt
-
-import blog
-from .models import *
-from .forms import * 
+from .models import Neighbourhood,Business,Post,User
+from .forms import UserCreationForm,UserChangeForm, UpdateProfileForm,UpdateUserForm,BusinessForm,PostForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.views import generic
 from django.contrib.auth import logout as django_logout
+from django.urls import reverse_lazy
 
 # Create your views here.
+class UserRegister(generic.CreateView):
+  form_class= UserCreationForm
+  template_name='registration/register.html'
+  success_url= reverse_lazy('login')
+
+
+class UserEdit(generic.UpdateView):
+  form_class= UserChangeForm
+  template_name='registration/edit_profile.html'
+  success_url= reverse_lazy('home')
+
+  def get_object(self):
+    return self.request.user
+
 def home(request):
+    post=Post.objects.all()
+    
     date = dt.date.today()
     # business = Business.get_allbusiness()
     all_neighbourhoods = Neighbourhood.get_neighbourhoods()
@@ -20,16 +36,16 @@ def home(request):
         neighbourhoods = request.GET.get("neighbourhood")
         searched_neighbourhood = Business.get_by_neighbourhood(neighbourhoods)
         all_posts = Post.get_by_neighbourhood(neighbourhoods)
-        message = f"{neighbourhoods}"
+        infos = f"{neighbourhoods}"
         all_neighbourhoods = Neighbourhood.get_neighbourhoods()        
         
-        return render(request, 'home.html', {"message":message,"location": searched_neighbourhood,
-                                               "all_neighbourhoods":all_neighbourhoods, "all_posts":all_posts})
+        return render(request, 'home.html', {"infos":infos,"location": searched_neighbourhood,
+                                               "all_neighbourhoods":all_neighbourhoods, "all_posts":all_posts,'post':post})
 
     else:
-        message = "No Neighbourhood Found!"
+        infos = "No Neighbourhood Found!"
 
-    return render(request, 'home.html', {"date": date, "all_neighbourhoods":all_neighbourhoods,})
+    return render(request, 'home.html', {"date": date, "all_neighbourhoods":all_neighbourhoods,'post':post})
 
 login_required(login_url='/accounts/login/')
 def profile(request, username):
@@ -55,32 +71,32 @@ def search_businesses(request):
     if 'keyword' in request.GET and request.GET['keyword']:
         search_term = request.GET.get('keyword')
         searched_blogs = Business.search_business(search_term)
-        message = f"(search_term)"
+        infos = f"(search_term)"
         
-        return render(request, 'search.html', {"message": message, "businesses": searched_blogs})
+        return render(request, 'search.html', {"infos": infos, "businesses": searched_blogs})
     else:
-        message = "No business searched"
-        return render(request, 'search.html', {"message": message})
+        infos = "No business searched"
+        return render(request, 'search.html', {"infos": infos})
     
 
 def get_business(request, id):
 
-    try:
-        blog = Business.objects.get(pk = id)
+        blog = Business.objects.get(pk=id)
+    # try:
         
-    except ObjectDoesNotExist:
-        raise Http404()
+    # except ObjectDoesNotExist:
+    #     raise Http404()
     
     
-    return render(request, "blogs.html", {"blog": blog})
+        return render(request, "blogs.html", {"blog": blog})
     
 login_required(login_url='/accounts/login/')
-def new_business(request):
+def business(request):
     current_user = request.user
     profile = request.user.profile
     
     if request.method == 'POST':
-        form = NewBusinessForm(request.POST, request.FILES)
+        form = BusinessForm(request.POST, request.FILES)
         if form.is_valid():
             blog = form.save(commit=False)
             blog.Admin = current_user
@@ -89,7 +105,7 @@ def new_business(request):
         return redirect('home')
 
     else:
-        form = NewBusinessForm()
+        form = BusinessForm()
     return render(request, 'business.html', {"form": form})
 
 @login_required
@@ -105,7 +121,7 @@ def new_post(request):
     neighbourhood = request.user.profile.neighbourhood
 
     if request.method == 'POST':
-        form = NewPostForm(request.POST)
+        form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.Author = current_user
@@ -115,6 +131,6 @@ def new_post(request):
         return redirect('home')
 
     else:
-        form = NewPostForm()
+        form = PostForm()
     return render(request, 'add_post.html', {"form": form})
 
