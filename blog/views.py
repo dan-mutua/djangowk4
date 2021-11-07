@@ -8,7 +8,7 @@ from django.http import Http404
 from django.contrib.auth import logout as django_logout
 
 # Create your views here.
-def index(request):
+def home(request):
     date = dt.date.today()
     # business = Business.get_allbusiness()
     all_neighbourhoods = Neighbourhood.get_neighbourhoods()
@@ -21,13 +21,13 @@ def index(request):
         message = f"{neighbourhoods}"
         all_neighbourhoods = Neighbourhood.get_neighbourhoods()        
         
-        return render(request, 'index.html', {"message":message,"location": searched_neighbourhood,
+        return render(request, 'home.html', {"message":message,"location": searched_neighbourhood,
                                                "all_neighbourhoods":all_neighbourhoods, "all_posts":all_posts})
 
     else:
         message = "No Neighbourhood Found!"
 
-    return render(request, 'index.html', {"date": date, "all_neighbourhoods":all_neighbourhoods,})
+    return render(request, 'home.html', {"date": date, "all_neighbourhoods":all_neighbourhoods,})
 
 login_required(login_url='/accounts/login/')
 def profile(request, username):
@@ -84,7 +84,7 @@ def new_business(request):
             project.Admin = current_user
             project.admin_profile = profile
             project.save()
-        return redirect('index')
+        return redirect('home')
 
     else:
         form = NewBusinessForm()
@@ -110,7 +110,7 @@ def new_post(request):
             post.author_profile = profile
             post.neighbourhood = neighbourhood
             post.save()
-        return redirect('index')
+        return redirect('home')
 
     else:
         form = NewPostForm()
