@@ -1,111 +1,156 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
-from cloudinary.models import CloudinaryField
+from django.http import Http404
 from django.db.models.signals import post_save
-
-
-
+from django.dispatch import  receiver
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
-class Category(models.Model):
-  name = models.CharField(max_length=300)
-
-  def __str__(self):
-      return self.name
-
-  def get_absolute_url(self):
-    return reverse('home')
-
-GENDER_CHOICES = (
-   ('M', 'Male'),
-   ('F', 'Female'),
-   ('O', 'Prefer not to say')
-   )
-
-class Location(models.Model):
-    location=models.CharField(max_length=30)
-
-    objects = models.Manager()
-
+class Neighbourhood(models.Model):
+    name = models.CharField(max_length=200)
+    location = models.CharField(max_length=250)
+    occupants_count = models.IntegerField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    Admin = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    
+    def save_neighbourhood(self):
+        self.save()
+    
+    def delete_neighbourhood(self):
+        self.delete()
+        
+    @classmethod
+    def get_neighbourhoods(cls):
+        projects = cls.objects.all()
+        return projects
+    
+    @classmethod
+    def search_neighbourhoods(cls, search_term):
+        projects = cls.objects.filter(name__icontains=search_term)
+        return projects
+    
+    
+    @classmethod
+    def get_by_admin(cls, Admin):
+        projects = cls.objects.filter(Admin=Admin)
+        return projects
+    
+    
+    @classmethod
+    def get_neighbourhood(request, neighborhood):
+        try:
+            project = Neighbourhood.objects.get(pk = id)
+            
+        except ObjectDoesNotExist:
+            raise Http404()
+        
+        return project
+    
     def __str__(self):
-        return self.location
-class Post(models.Model):
-  
-  # title = models.CharField(max_length=200)
-  # author = models.ForeignKey(User, on_delete=models.CASCADE)
-  # category = models.CharField(max_length=200,default='supercar')
-  # images =  CloudinaryField( 'image', null=True, )
-  # body = models.TextField()
-  user_name = models.OneToOneField(User,on_delete=models.CASCADE)
-  user_id = models.PositiveIntegerField(default=0)
-  name = models.CharField(max_length=200)
-  user_location=models.ForeignKey(Location,on_delete=models.CASCADE)
-  image = CloudinaryField("image")
-  date = models.DateTimeField(auto_now_add=True)
-
-  @classmethod
-  def get_mtaa(cls):
-        neiba = Post.objects.all()
-        return neiba
-
-  class Meta:
-        ordering = ['name']
-
-  @classmethod
-  def search_mtaa(cls,searchmtaa):
-        neiba= cls.objects.filter(id__icontains = searchmtaa)
-        return neiba
-
-  def __str__(self):
-    return self.title 
-
-  def get_absolute_url(self):
-    return reverse('home')
-
-class NeibaV(models.Model):
-    pub_date = models.DateTimeField(auto_now_add=True, null=True) 
-    title = models.CharField(max_length = 300)
-    neiba = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    body = models.TextField()
-
+        return self.name
+    
+    class Meta:
+        ordering = ['-pub_date']
+        verbose_name = 'My Neighbourhood'
+        verbose_name_plural = 'Neighbourhoods'
+        
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    name = models.CharField(max_length=50, blank=True, null=True)
+    location = models.CharField(max_length=50, blank=True, null=True)
+    picture = models.ImageField(upload_to='profile_pics/', blank=True, default='profile_pics/default.jpg')
+    neighbourhood = models.ForeignKey('Neighbourhood', on_delete=models.SET_NULL, null=True, related_name='occupant', blank=True)
+    
     def __str__(self):
-	    return self.title
-    def save_posts(self):
-	    self.save()
-
-    def delete_posts(self):
-	    self.delete() 
-class ProfileView(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    user_email = models.CharField(null=True, max_length=255)
-    phone_number = models.IntegerField(null=True)
-    user_bio = models.CharField(blank=True,max_length=255)
-    house_location = models.CharField(blank=True,max_length=255)
-    user_pic = CloudinaryField('image')
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=11,  default='Male')
-
-    def __str__(self):
-        return self.user.username
-
+        return f'{self.user.username} profile'
+    
+    def delete(self):
+        self.delete()
+    
+    @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            ProfileView.objects.create(user=instance)
-    post_save.connect(create_user_profile, sender=User)
+            Profile.objects.create(user=instance)
 
-
+    @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
-    post_save.connect(save_user_profile, sender=User)
-
-
-    class Meta:
-        ordering = ('-user',)
-
-
+        
+class Business(models.Model):
+    name = models.CharField(max_length=250)
+    email = models.EmailField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    Admin = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    admin_profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, default='1')
+    address = models.TextField()
+    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE, blank=True, default='1')
+     
+     
+    def save_business(self):
+        self.save()
+    
+    def delete_business(self):
+        self.delete()
+        
     @classmethod
-    def getProfileByName(cls, username):
-        uprofile = cls.objects.filter(username=username)
-        return uprofile
+    def get_allbusiness(cls):
+        business = cls.objects.all()
+        return business
+    
+    @classmethod
+    def search_business(cls, search_term):
+        business = cls.objects.filter(name__icontains=search_term)
+        return business
+    
+    @classmethod
+    def get_by_neighbourhood(cls, neighbourhoods):
+        business = cls.objects.filter(neighbourhood__name__icontains=neighbourhoods)
+        return business
+    
+    @classmethod
+    def get_businesses(request, id):
+        try:
+            business = Business.objects.get(pk = id)
+            
+        except ObjectDoesNotExist:
+            raise Http404()
+        
+        return business
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'My Business'
+        verbose_name_plural = 'Business'
 
+class Post(models.Model):
+    post = models.TextField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+    Author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    
+    def save_post(self):
+        self.save()
+    
+    def delete_post(self):
+        self.delete()
+        
+    @classmethod
+    def get_allpost(cls):
+        posts = cls.objects.all()
+        return posts
+    
+    @classmethod
+    def get_by_neighbourhood(cls, neighbourhoods):
+        posts = cls.objects.filter(neighbourhood__name__icontains=neighbourhoods)
+        return posts
+    
+    def __str__(self):
+        return self.post
+    
+    class Meta:
+        ordering = ['-pub_date']
+        verbose_name = 'My Post'
+        verbose_name_plural = 'Posts'

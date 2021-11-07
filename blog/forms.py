@@ -1,32 +1,41 @@
 from django import forms
-from .models import Post,ProfileView,NeibaV
-
-
-
-
-
-class PostForm(forms.ModelForm):
-  class Meta:
-    model = Post
-    fields = ('user_name', 'user_id','name','image','user_location')
-
-    # widgets={
-    #   'title': forms.TextInput(attrs={'class':'form-control'}),
-    #   'author':forms.Select(attrs={'class':'form-control'}),
-    #   # 'category':forms.Select(choices=choices_l,attrs={'class':'form-control'}),
-    #   'body': forms.Textarea(attrs={'class':'form-control'})
-    # } 
-    
-class ProfileUpdateForm(forms.ModelForm):
-  
+from django.contrib.auth.models import User
+from .models import *
+from django.contrib.auth.forms import UserCreationForm
+from crispy_forms.helper import FormHelper
+ 
+ 
+class UpdateUserForm(forms.ModelForm):
+    email = forms.EmailField(max_length=254)
 
     class Meta:
-        model = ProfileView
-        fields = ['user_pic', 'user_email','house_location','user', 'user_email',  'user_bio', 'gender']
+        model = User
+        fields = ('username', 'email')
+        
 
-class MtaaForm(forms.ModelForm):
-     
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['name', 'location', 'picture', 'neighbourhood']
+        
+class NewBusinessForm(forms.ModelForm):
+    class Meta:
+        model = Business
+        exclude = ['Admin', 'pub_date', 'admin_profile']
+        widgets = {
+          'address': forms.Textarea(attrs={'rows':1, 'cols':10,}),
+        }
 
-     class Meta:
-         model=NeibaV
-         fields = ['neiba','author','title','body']    
+class NewNeighbourhoodForm(forms.ModelForm):
+    class Meta:
+        model = Neighbourhood
+        exclude = ['Admin', 'pub_date', 'admin_profile']
+        
+        
+class NewPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        exclude = ['Author', 'pub_date', 'author_profile', 'neighbourhood']
+        widgets = {
+          'post': forms.Textarea(attrs={'rows':2, 'cols':10,}),
+        }
